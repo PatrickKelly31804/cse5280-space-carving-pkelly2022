@@ -2,6 +2,13 @@
 3-D object modeling: space carving
 # CSE5280 Space Carving
 
+
+## Demo Video
+
+Watch the reconstruction demo here:
+https://drive.google.com/file/d/1sutsUoAEwrcsCyXF9ef_v1y2ZTGmSMcS/view?usp=sharing
+
+
 This project implements a basic visual hull reconstruction pipeline using space carving.
 
 The program creates multiple silhouette views, projects 3D voxel points into each view using a pinhole camera model, removes voxels that fall outside the silhouettes, and converts the remaining voxels into a point cloud/mesh using Open3D.
