@@ -32,3 +32,7 @@ projection.py - implements pinhole projection
 carving.py - performs space carving  
 mesh.py - converts voxels to an Open3D mesh  
 utils.py - helper file
+
+## Demo Video
+
+https://drive.google.com/file/d/1sutsUoAEwrcsCyXF9ef_v1y2ZTGmSMcS/view?usp=sharing
