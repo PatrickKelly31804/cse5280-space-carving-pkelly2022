@@ -1,17 +1,6 @@
-import torch
 import numpy as np
-from pytorch3d.io import load_objs_as_meshes
-from pytorch3d.renderer import (
-    FoVPerspectiveCameras, RasterizationSettings,
-    MeshRenderer, MeshRasterizer, SoftSilhouetteShader
-)
-import matplotlib.pyplot as plt
 
 def render_views(obj_path, num_views=20):
-    device = torch.device("cpu")
-
-    mesh = load_objs_as_meshes([obj_path], device=device)
-
     images = []
     masks = []
     cameras_data = []
@@ -19,31 +8,28 @@ def render_views(obj_path, num_views=20):
     for i in range(num_views):
         angle = 2 * np.pi * i / num_views
 
-        R = torch.tensor([[
+        R = np.array([
             [np.cos(angle), 0, np.sin(angle)],
             [0, 1, 0],
             [-np.sin(angle), 0, np.cos(angle)]
-        ]], dtype=torch.float32)
+        ])
 
-        T = torch.tensor([[0, 0, 3]], dtype=torch.float32)
+        T = np.array([0, 0, 3])
 
-        cameras = FoVPerspectiveCameras(R=R, T=T)
+        # fake silhouette (circle)
+        img_size = 256
+        mask = np.zeros((img_size, img_size))
 
-        raster_settings = RasterizationSettings(image_size=256)
+        cx, cy = img_size // 2, img_size // 2
+        radius = 80
 
-        renderer = MeshRenderer(
-            rasterizer=MeshRasterizer(
-                cameras=cameras,
-                raster_settings=raster_settings
-            ),
-            shader=SoftSilhouetteShader()
-        )
+        for x in range(img_size):
+            for y in range(img_size):
+                if (x - cx)**2 + (y - cy)**2 < radius**2:
+                    mask[y, x] = 1
 
-        silhouette = renderer(mesh)[0, ..., 3].cpu().numpy()
-
-        images.append(silhouette)
-        masks.append((silhouette > 0.5).astype(int))
-
-        cameras_data.append((R.numpy(), T.numpy()))
+        images.append(mask)
+        masks.append(mask)
+        cameras_data.append((R, T))
 
     return images, masks, cameras_data

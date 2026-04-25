@@ -4,16 +4,24 @@ from projection import project_point
 def space_carve(masks, cameras, grid_size=32):
     voxels = np.ones((grid_size, grid_size, grid_size))
 
-    K = np.eye(3)
+    K = np.array([
+        [180, 0, 128],
+        [0, 180, 128],
+        [0, 0, 1]
+    ])
 
     for x in range(grid_size):
         for y in range(grid_size):
             for z in range(grid_size):
 
-                X = np.array([x/grid_size, y/grid_size, z/grid_size])
+                X = np.array([
+                    (x / grid_size) - 0.5,
+                    (y / grid_size) - 0.5,
+                    (z / grid_size) - 0.5
+                ])
 
                 for mask, (R, T) in zip(masks, cameras):
-                    proj = project_point(X, R[0], T[0], K)
+                    proj = project_point(X, R, T, K)
 
                     if proj is None:
                         voxels[x,y,z] = 0
