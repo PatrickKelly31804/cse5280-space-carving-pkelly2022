@@ -21,7 +21,7 @@ def render_views(obj_path, num_views=20):
         mask = np.zeros((img_size, img_size))
 
         cx, cy = img_size // 2, img_size // 2
-        radius = 80
+        radius = 55
 
         for x in range(img_size):
             for y in range(img_size):
